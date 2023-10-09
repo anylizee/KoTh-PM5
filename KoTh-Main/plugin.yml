@@ -1,0 +1,13 @@
+name: KoTh-Main
+api: [5.0.0]
+version: 2.0.0
+authors:
+  - ItsMax123
+  - Viriors
+main: koth\Loader
+description: "Plugin Basic From KoThs."
+
+permissions:
+  koth.command:
+    default: op
+    
