@@ -10,4 +10,5 @@ description: "Plugin Basic From KoThs."
 permissions:
   koth.command:
     default: op
-    
+  koth.manager:
+    default: op

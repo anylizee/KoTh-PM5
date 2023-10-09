@@ -17,6 +17,8 @@ namespace viriors;
 
 use viriors\tick\KothTick;
 use viriors\tick\StartKothTick;
+use viriors\command\KothCommand;
+
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\utils\Config;
@@ -35,6 +37,7 @@ class Loader extends PluginBase {
 	
 	public int $TASK_DELAY;
 	public int $CAPTURE_TIME;
+	public array $START_TIMES;
 	public array $REWARD_COMMANDS;
   
   protected function onLoad() : void {
@@ -42,14 +45,18 @@ class Loader extends PluginBase {
   }
   
   protected function onEnable() : void {
+
     $this->saveResource("config.yml");
     		$this->saveResource("data.yml");
     		$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
     		$this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
+    		$this->START_TIMES = $config->get("times", []);
+    $this->REWARD_COMMANDS = $config->get("commands", ["give {player} diamond 64", "say {player}"]);
     		foreach ($this->data->getAll() as $arenaName => $arenaData) {
     			$this->arenas[$arenaName] = new Arena($arenaName);
     		}
     $this->getScheduler()->scheduleRepeatingTask(new StartKothTick($this), 600);
+    $this->getServer()->getCommandMap()->register("/koth", new KothCommand());
   }
   
   public function isRunning() : bool {
@@ -79,10 +86,10 @@ class Loader extends PluginBase {
 	public function stopKoth(string $winnerName = null) : string {
 		if (!$this->isRunning()) return "§7[§bKOTH§7] §cThere is no KOTH events currently running";
 		if (isset($winnerName)) {
-			/*$consoleCommandSender = new ConsoleCommandSender($this->getServer(), $this->getServer()->getLanguage());
+			$consoleCommandSender = new ConsoleCommandSender($this->getServer(), $this->getServer()->getLanguage());
 			foreach ($this->REWARD_COMMANDS as $command){
-				$this->getServer()->dispatchCommand($consoleCommandSender, str_replace("{PLAYER}", $winnerName, $command));
-			}*/
+				$this->getServer()->dispatchCommand($consoleCommandSender, str_replace("{player}", $winnerName, $command));
+			}
 		} else {
 			$winnerName = "no one";
 		}

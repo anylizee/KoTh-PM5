@@ -1,0 +1,6 @@
+# set up the koths!
+commands:
+  - "give {player} diamond 64"
+  - "say {player}"
+times:
+  - 17.0
